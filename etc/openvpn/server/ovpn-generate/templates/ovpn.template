@@ -1,0 +1,40 @@
+client
+
+dev tun
+proto tcp
+remote {{servername}}
+
+resolv-retry infinite
+nobind
+
+persist-key
+persist-tun
+
+verb 1
+
+keepalive 10 120
+inactive 3600
+cipher AES-256-GCM
+auth SHA256
+comp-lzo no
+tun-mtu 1400
+#fragment 1375
+mssfix 1375
+sndbuf 1048576
+rcvbuf 1048576
+txqueuelen 2048
+tcp-queue-limit 1024
+tcp-nodelay
+script-security 2
+dhcp-option DNS 192.168.59.1
+key-direction 1
+
+<tls-auth>
+{{takey}}</tls-auth>
+<ca>
+{{cacert}}</ca>
+<cert>
+{{usercert}}</cert>
+<key>
+{{userkey}}</key>
+

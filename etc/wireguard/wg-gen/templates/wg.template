@@ -1,0 +1,10 @@
+[Interface]
+Address = {{ip}}/24
+DNS = {{dns}}
+PrivateKey = {{privatekey}}
+
+[Peer]
+PublicKey = {{publickeyserver}}
+AllowedIPs = {{route}}
+Endpoint = {{server}}
+PersistentKeepalive = 25
