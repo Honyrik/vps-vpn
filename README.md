@@ -59,3 +59,14 @@ firewall-cmd --permanent --zone=public --add-service=openvpn-tcp
 firewall-cmd --permanent --zone=public --add-service=wg
 firewall-cmd --reload
 ```
+
+# Создание настроек клиентов
+## Клиент openvpn
+```bash
+ovpn-gen client1
+```
+## Клиент wg
+```bash
+wg-gen client1 ip
+```
+ip - любой адрес в пределе (/etc/wireguard/wg-gen/vars route)
