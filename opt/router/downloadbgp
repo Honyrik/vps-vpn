@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 cd /opt/router/blacklist/list
-wget -N https://github.com/1andrevich/Re-filter-lists/releases/latest/download/ipsum.lst https://antifilter.download/list/subnet.lst
+wget -N https://antifilter.download/list/ipsum.lst https://antifilter.download/list/subnet.lst
 old=$(cat /opt/router/blacklist/md5.txt);
 new=$(cat /opt/router/blacklist/list/*.lst | md5sum | head -c 32);
 if [ "$old" != "$new" ]

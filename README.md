@@ -1,7 +1,9 @@
 # vps-vpn
+
 Скрипты помощь vps vpn centos (openvpn + wireguard + bgp)
 
 # Установка
+
 ```bash
 yum install -y bird2 openvpn curl kmod-wireguard wireguard-tools easy-rsa dnsmasq wget knock-server
 ln -s /usr/share/easy-rsa/3/pki /etc/openvpn/server/keys
@@ -11,10 +13,13 @@ cd /etc/openvpn/server/ovpn-generate
 pip install -r requirements.txt
 cp /usr/share/easy-rsa/3/vars.example /usr/share/easy-rsa/3/vars
 ```
+
 редактируем:
- - /usr/share/easy-rsa/3/vars [EasyRSA](https://community.openvpn.net/openvpn/wiki/EasyRSA3-OpenVPN-Howto)
- - /etc/openvpn/server/ovpn-generate/vars
- - /etc/wireguard/wg-gen/vars
+
+-   /usr/share/easy-rsa/3/vars [EasyRSA](https://community.openvpn.net/openvpn/wiki/EasyRSA3-OpenVPN-Howto)
+-   /etc/openvpn/server/ovpn-generate/vars
+-   /etc/wireguard/wg-gen/vars
+
 ```bash
 /usr/share/easy-rsa/3/easyrsa init-pki
 /usr/share/easy-rsa/3/easyrsa gen-dh
@@ -24,20 +29,26 @@ openvpn --genkey --secret /etc/openvpn/server/keys/ta.key
 /usr/bin/wg genkey | /usr/bin/tee /etc/wireguard/server_private.key | /usr/bin/wg pubkey | /usr/bin/tee /etc/wireguard/server_public.key
 sed -i.bak -e "s/^PrivateKey.*$/PrivateKey = $(cat /etc/wireguard/server_private.key)/g" /etc/wireguard/wg0.conf
 ```
+
 редактируем:
- - /etc/openvpn/server/server.conf
- - /etc/wireguard/wg0.conf
+
+-   /etc/openvpn/server/server.conf
+-   /etc/wireguard/wg0.conf
 
 # Добавляем cron
+
 ```bash
 crontab -e
 ```
+
 ```
 */30 * * * * /opt/router/downloadbgp
+*/30 * * * * /opt/router/gen/gen_list.sh
 0 1 * * * /usr/bin/systemctl restart openvpn-server@server.service 2>&1 1>>/dev/null
 ```
 
 # Стартуем
+
 ```bash
 systemctl enable bird
 systemctl start bird
@@ -61,12 +72,17 @@ firewall-cmd --reload
 ```
 
 # Создание настроек клиентов
+
 ## Клиент openvpn
+
 ```bash
 ovpn-gen client1
 ```
+
 ## Клиент wg
+
 ```bash
 wg-gen client1 ip
 ```
+
 ip - любой адрес в пределе (/etc/wireguard/wg-gen/vars route)
