@@ -5,6 +5,8 @@ from jinja2 import Template
 import sys
 import os.path
 import subprocess
+import datetime
+import os
 '''Generate an .ovpn file from a set of user keys
 to be used with an ovpn client.
 '''
@@ -32,11 +34,22 @@ ca = '/etc/openvpn/server/keys/ca.crt'
 ta = '/etc/openvpn/server/keys/ta.key'
 usercert = '/etc/openvpn/server/keys/issued/' + username + '.crt'
 userkey = '/etc/openvpn/server/keys/private/' + username + '.key'
+userreq = '/etc/openvpn/server/keys/reqs/' + username + '.req'
 userovpn = '/etc/openvpn/server/gen-client/' + username + '.ovpn'
 
 if not os.path.isfile(usercert):
   subprocess.call(['./easyrsa', 'build-client-full', username, 'nopass', '--days=1095'], cwd='/usr/share/easy-rsa/3')
-
+else:
+  now = datetime.datetime.now() + datetime.timedelta(days=180)
+  cert_date = datetime.datetime.strptime(subprocess.check_output(['/usr/bin/openssl', 'x509', '-in', usercert, '-noout', '-enddate', '-dateopt', 'iso_8601']).decode('utf-8').split('=')[1].strip(), '%Y-%m-%d %H:%M:%SZ')
+  if cert_date < now:
+    print 'Certificate for ' + username + ' is expired, generating new one'
+    os.remove(usercert)
+    os.remove(userkey)
+    os.remove(userreq)
+    subprocess.call(['./easyrsa', 'build-client-full', username, 'nopass', '--days=1095'], cwd='/usr/share/easy-rsa/3')
+  else:
+    print 'Certificate for ' + username + ' is still valid'
 
 with open('/etc/openvpn/server/ovpn-generate/templates/ovpn.template') as ovpntemplate, \
         open(ta) as tafile, \
