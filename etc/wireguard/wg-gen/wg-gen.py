@@ -23,6 +23,7 @@ except:
   print 'Error: Supply a ip!'
   sys.exit()
 
+force = next((True for item in sys.argv if item == '--force'), False)
 separator = "="
 envs = {}
 
@@ -39,8 +40,15 @@ serverPublicPath = '/etc/wireguard/server_public.key'
 userkey = '/etc/wireguard/client/' + username + '_private.key'
 userpublickey = '/etc/wireguard/client/' + username + '_public.key'
 userwg = '/etc/wireguard/client-gen/' + username + '.wg'
+oldpublickey = ''
+renew = False
 
-if not os.path.isfile(userkey):
+if os.path.isfile(userkey) and force:
+  with open(userpublickey) as publickeyfile:
+    oldpublickey = publickeyfile.read().strip()
+    renew = True
+
+if not os.path.isfile(userkey) or force:
   subprocess.call(['/usr/bin/wg genkey | /usr/bin/tee /etc/wireguard/client/' + username +'_private.key | /usr/bin/wg pubkey | /usr/bin/tee /etc/wireguard/client/' + username + '_public.key'], shell=True)
 
 '''
@@ -66,6 +74,8 @@ with open('/etc/wireguard/wg-gen/templates/wg.template') as wgtemplate, \
   publickeyvalue = publickeyfile.read().strip()
   serverPublicvalue = serverPublicFile.read().strip()
   outfile.write(model.render(ip=ip,dns=dns,route=route,publickeyserver=serverPublicvalue,privatekey=keyvalue,server=server))
+  if renew:
+    subprocess.call(['wg set wg0 peer "'+ oldpublickey +'" remove'], shell=True)
   subprocess.call(['wg set wg0 peer "'+ publickeyvalue +'" allowed-ips ' + ip + '/32'], shell=True)
   print 'wg file generated: ' + userwg
 
