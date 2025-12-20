@@ -16,7 +16,8 @@ keepalive 10 120
 inactive 3600
 cipher AES-256-GCM
 auth SHA256
-comp-lzo no
+comp-lzo yes
+allow-compression yes
 tun-mtu 1400
 #fragment 1375
 mssfix 1375
