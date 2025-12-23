@@ -1,0 +1,4 @@
+[wg]
+title=wireguard
+description=wireguard
+ports=51820/udp

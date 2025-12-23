@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 from jinja2 import Template
@@ -14,13 +14,13 @@ print(sys.argv)
 try:
   username = sys.argv[1]
 except:
-  print 'Error: Supply a username!'
+  print('Error: Supply a username!')
   sys.exit()
 
 try:
   ip = sys.argv[2]
 except:
-  print 'Error: Supply a ip!'
+  print('Error: Supply a ip!')
   sys.exit()
 
 force = next((True for item in sys.argv if item == '--force'), False)
@@ -75,5 +75,5 @@ with open('/etc/wireguard/wg-gen/templates/wg.template') as wgtemplate, \
   if oldpublickey != '':
     subprocess.call(['wg set wg0 peer "'+ oldpublickey +'" remove'], shell=True)
   subprocess.call(['wg set wg0 peer "'+ publickeyvalue +'" allowed-ips ' + ip + '/32'], shell=True)
-  print 'wg file generated: ' + userwg
+  print('wg file generated: ' + userwg)
 

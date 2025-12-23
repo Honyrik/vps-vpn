@@ -1,0 +1,4 @@
+[awg]
+title=Amnezia wireguard
+description=Amnezia wireguard
+ports=31820/udp

@@ -1,0 +1,4 @@
+[Named]
+title=DNS
+description=DNS
+ports=53/tcp|53/udp

@@ -1,0 +1,4 @@
+[v2ray]
+title=v2ray
+description=v2ray
+ports=13000/tcp

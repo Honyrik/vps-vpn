@@ -1,0 +1,4 @@
+[BIRD]
+title=BIRD
+description=BIRD
+ports=179/tcp

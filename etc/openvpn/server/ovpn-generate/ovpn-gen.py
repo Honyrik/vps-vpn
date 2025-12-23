@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 from jinja2 import Template
@@ -16,11 +16,14 @@ print(sys.argv)
 try:
   username = sys.argv[1]
 except:
-  print 'Error: Supply a username!'
+  print('Error: Supply a username!')
   sys.exit()
 
 separator = "="
 envs = {}
+easyrsa_dir = '/usr/share/easy-rsa/3'
+if not os.path.isdir(easyrsa_dir):
+  easyrsa_dir = '/usr/share/easy-rsa'
 
 with open('/etc/openvpn/server/vars') as f:
     for line in f:
@@ -38,18 +41,18 @@ userreq = '/etc/openvpn/server/keys/reqs/' + username + '.req'
 userovpn = '/etc/openvpn/server/gen-client/' + username + '.ovpn'
 
 if not os.path.isfile(usercert):
-  subprocess.call(['./easyrsa', 'build-client-full', username, 'nopass', '--days=1095'], cwd='/usr/share/easy-rsa/3')
+  subprocess.call(['./easyrsa', 'build-client-full', username, 'nopass', '--days=1095'], cwd=easyrsa_dir)
 else:
   now = datetime.datetime.now() + datetime.timedelta(days=180)
   cert_date = datetime.datetime.strptime(subprocess.check_output(['/usr/bin/openssl', 'x509', '-in', usercert, '-noout', '-enddate', '-dateopt', 'iso_8601']).decode('utf-8').split('=')[1].strip(), '%Y-%m-%d %H:%M:%SZ')
   if cert_date < now:
-    print 'Certificate for ' + username + ' is expired, generating new one'
+    print('Certificate for ' + username + ' is expired, generating new one')
     os.remove(usercert)
     os.remove(userkey)
     os.remove(userreq)
-    subprocess.call(['./easyrsa', 'build-client-full', username, 'nopass', '--days=1095'], cwd='/usr/share/easy-rsa/3')
+    subprocess.call(['./easyrsa', 'build-client-full', username, 'nopass', '--days=1095'], cwd=easyrsa_dir)
   else:
-    print 'Certificate for ' + username + ' is still valid'
+    print('Certificate for ' + username + ' is still valid')
 
 with open('/etc/openvpn/server/ovpn-generate/templates/ovpn.template') as ovpntemplate, \
         open(ta) as tafile, \
@@ -63,6 +66,5 @@ with open('/etc/openvpn/server/ovpn-generate/templates/ovpn.template') as ovpnte
   cavalue = cafile.read()
   tavalue = tafile.read()
   outfile.write(model.render(usercert=certvalue, userkey=keyvalue, cacert=cavalue, servername=server, takey=tavalue))
-  print model.render(usercert=certvalue, userkey=keyvalue, cacert=cavalue, servername=server, takey=tavalue)
-  print 'OVPN file generated: ' + userovpn
+  print('OVPN file generated: ' + userovpn)
 
