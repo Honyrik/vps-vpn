@@ -45,6 +45,7 @@ cp /usr/share/easy-rsa/vars.example /usr/share/easy-rsa/vars
 -   /usr/share/easy-rsa/3/vars [EasyRSA](https://community.openvpn.net/openvpn/wiki/EasyRSA3-OpenVPN-Howto)
 -   /etc/openvpn/server/ovpn-generate/vars
 -   /etc/wireguard/wg-gen/vars
+-   /usr/share/easy-rsa/vars
 
 ```bash
 #CENTOS7

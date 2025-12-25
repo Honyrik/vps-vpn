@@ -41,7 +41,7 @@ userreq = '/etc/openvpn/server/keys/reqs/' + username + '.req'
 userovpn = '/etc/openvpn/server/gen-client/' + username + '.ovpn'
 
 if not os.path.isfile(usercert):
-  subprocess.call(['./easyrsa', 'build-client-full', username, 'nopass', '--days=1095'], cwd=easyrsa_dir)
+  subprocess.call(['./easyrsa', 'build-client-full', username, 'nopass'], cwd=easyrsa_dir)
 else:
   now = datetime.datetime.now() + datetime.timedelta(days=180)
   cert_date = datetime.datetime.strptime(subprocess.check_output(['/usr/bin/openssl', 'x509', '-in', usercert, '-noout', '-enddate', '-dateopt', 'iso_8601']).decode('utf-8').split('=')[1].strip(), '%Y-%m-%d %H:%M:%SZ')
@@ -50,7 +50,7 @@ else:
     os.remove(usercert)
     os.remove(userkey)
     os.remove(userreq)
-    subprocess.call(['./easyrsa', 'build-client-full', username, 'nopass', '--days=1095'], cwd=easyrsa_dir)
+    subprocess.call(['./easyrsa', 'build-client-full', username, 'nopass'], cwd=easyrsa_dir)
   else:
     print('Certificate for ' + username + ' is still valid')
 
