@@ -25,7 +25,7 @@ easyrsa_dir = '/usr/share/easy-rsa/3'
 if not os.path.isdir(easyrsa_dir):
   easyrsa_dir = '/usr/share/easy-rsa'
 
-with open('/etc/openvpn/server/vars') as f:
+with open('/etc/openvpn/server/ovpn-generate/vars') as f:
     for line in f:
         if separator in line:
             name, value = line.split(separator, 1)
