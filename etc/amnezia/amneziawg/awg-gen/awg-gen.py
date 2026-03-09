@@ -26,7 +26,25 @@ except:
 
 force = next((True for item in sys.argv if item == '--force'), False)
 separator = "="
+left_separator = "["
+right_separator = "]"
 envs = {}
+
+def simple_parse_awg_config(c):
+    config = {}
+    section = {}
+    for line in c.split('\n'):
+        if separator in line:
+            name, value = line.split(separator, 1)
+            section[name.strip()] = value.strip()
+        elif left_separator in line and right_separator in line:
+            section_name = line.strip(left_separator + right_separator)
+            section = {}
+            if section_name not in config:
+                config[section_name] = [section]
+            else:
+                config[section_name].append(section)
+    return config
 
 with open('/etc/amnezia/amneziawg/awg-gen/vars') as f:
     for line in f:
@@ -42,6 +60,10 @@ userkey = '/etc/amnezia/amneziawg/client/' + username + '_private.key'
 userpublickey = '/etc/amnezia/amneziawg/client/' + username + '_public.key'
 userwg = '/etc/amnezia/amneziawg/client-gen/' + username + '.wg'
 oldpublickey = ''
+awgconfigpath = '/etc/amnezia/amneziawg/awg0.conf'
+
+if envs.get('awgconfigpath', '').strip() != '':
+  awgconfigpath = envs['awgconfigpath']
 
 if os.path.isfile(userkey) and force:
   with open(userpublickey) as publickeyfile:
@@ -67,18 +89,18 @@ with open('/etc/amnezia/amneziawg/awg-gen/templates/wg.template') as wgtemplate,
         open(serverPublicPath) as serverPublicFile, \
         open(userkey) as keyfile, \
         open(userpublickey) as publickeyfile, \
-        open(userwg, 'w') as outfile:
-  awgconfig = configparser.ConfigParser()
-  awgconfig.read('/etc/amnezia/amneziawg/awg0.conf')
-  Jc = awgconfig['Interface']['Jc']
-  Jmin = awgconfig['Interface']['Jmin']
-  Jmax = awgconfig['Interface']['Jmax']
-  S1 = awgconfig['Interface']['S1']
-  S2 = awgconfig['Interface']['S2']
-  H1 = awgconfig['Interface']['H1']
-  H2 = awgconfig['Interface']['H2']
-  H3 = awgconfig['Interface']['H3']
-  H4 = awgconfig['Interface']['H4']
+        open(userwg, 'w') as outfile,\
+        open(awgconfigpath) as awgconfigfile:
+  awgconfig = simple_parse_awg_config(awgconfigfile.read())
+  Jc = awgconfig['Interface'][0]['Jc']
+  Jmin = awgconfig['Interface'][0]['Jmin']
+  Jmax = awgconfig['Interface'][0]['Jmax']
+  S1 = awgconfig['Interface'][0]['S1']
+  S2 = awgconfig['Interface'][0]['S2']
+  H1 = awgconfig['Interface'][0]['H1']
+  H2 = awgconfig['Interface'][0]['H2']
+  H3 = awgconfig['Interface'][0]['H3']
+  H4 = awgconfig['Interface'][0]['H4']
   model = Template(wgtemplate.read())
   keyvalue = keyfile.read().strip()
   publickeyvalue = publickeyfile.read().strip()
