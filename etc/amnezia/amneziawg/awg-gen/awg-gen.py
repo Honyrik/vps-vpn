@@ -58,7 +58,7 @@ route = envs["route"]
 serverPublicPath = '/etc/amnezia/amneziawg/server_public.key'
 userkey = '/etc/amnezia/amneziawg/client/' + username + '_private.key'
 userpublickey = '/etc/amnezia/amneziawg/client/' + username + '_public.key'
-userwg = '/etc/amnezia/amneziawg/client-gen/' + username + '.wg'
+userwg = '/etc/amnezia/amneziawg/client-gen/' + username + '.conf'
 oldpublickey = ''
 awgconfigpath = '/etc/amnezia/amneziawg/awg0.conf'
 

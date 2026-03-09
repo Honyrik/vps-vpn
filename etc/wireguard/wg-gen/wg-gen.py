@@ -39,7 +39,7 @@ route = envs["route"]
 serverPublicPath = '/etc/wireguard/server_public.key'
 userkey = '/etc/wireguard/client/' + username + '_private.key'
 userpublickey = '/etc/wireguard/client/' + username + '_public.key'
-userwg = '/etc/wireguard/client-gen/' + username + '.wg'
+userwg = '/etc/wireguard/client-gen/' + username + '.conf'
 oldpublickey = ''
 
 if os.path.isfile(userkey) and force:
