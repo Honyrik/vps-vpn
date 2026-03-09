@@ -7,13 +7,13 @@
 ```bash
 #CENTOS 7
 curl https://copr.fedorainfracloud.org/coprs/amneziavpn/amneziawg/repo/epel-7/amneziavpn-amneziawg-epel-7.repo -o /etc/yum.repos.d/amneziavpn-amneziawg-epel-7.repo
-yum install -y bird2 openvpn curl kmod-wireguard wireguard-tools easy-rsa dnsmasq wget knock-server amneziawg-dkms amneziawg-tools fail2ban
+yum install -y rsync bird2 openvpn curl kmod-wireguard wireguard-tools easy-rsa dnsmasq wget knock-server amneziawg-dkms amneziawg-tools fail2ban
 pip3 install --upgrade setuptools wheel --break-system-packages
 pip3 install Jinja2 --break-system-packages
 #DEBIAN
 sudo apt upgrade
 reboot
-sudo apt install -y curl wget python3-launchpadlib python3-pip gnupg2 linux-headers-$(uname -r)
+sudo apt install -y rsync curl wget python3-launchpadlib python3-pip gnupg2 linux-headers-$(uname -r)
 pip3 install --upgrade setuptools wheel --break-system-packages
 pip3 install Jinja2 --break-system-packages
 curl 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x75c9dd72c799870e310542e24166f2c257290828' -o /etc/apt/trusted.gpg.d/amnezia.asc
@@ -42,10 +42,10 @@ cp /usr/share/easy-rsa/vars.example /usr/share/easy-rsa/vars
 
 редактируем:
 
--   /usr/share/easy-rsa/3/vars [EasyRSA](https://community.openvpn.net/openvpn/wiki/EasyRSA3-OpenVPN-Howto)
--   /etc/openvpn/server/ovpn-generate/vars
--   /etc/wireguard/wg-gen/vars
--   /usr/share/easy-rsa/vars
+- /usr/share/easy-rsa/3/vars [EasyRSA](https://community.openvpn.net/openvpn/wiki/EasyRSA3-OpenVPN-Howto)
+- /etc/openvpn/server/ovpn-generate/vars
+- /etc/wireguard/wg-gen/vars
+- /usr/share/easy-rsa/vars
 
 ```bash
 #CENTOS7
@@ -67,9 +67,9 @@ sed -i.bak -e "s/^PrivateKey.*$/PrivateKey = $(cat /etc/amnezia/amneziawg/server
 
 редактируем:
 
--   /etc/openvpn/server/server.conf
--   /etc/wireguard/wg0.conf
--   /etc/amnezia/amneziawg/awg0.conf
+- /etc/openvpn/server/server.conf
+- /etc/wireguard/wg0.conf
+- /etc/amnezia/amneziawg/awg0.conf
 
 # Добавляем cron
 
