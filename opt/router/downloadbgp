@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
-cd /opt/router/blacklist/list
+DIR=/opt/router/blacklist/list
+mkdir -p $DIR
+cd $DIR
 wget -N https://antifilter.download/list/ipsum.lst https://antifilter.download/list/subnet.lst
-old=$(cat /opt/router/blacklist/md5.txt);
-new=$(cat /opt/router/blacklist/list/*.lst | md5sum | head -c 32);
+curl https://core.telegram.org/resources/cidr.txt -o telegram.lst
+old=$(cat $DIR/md5.txt);
+new=$(cat $DIR/*.lst | md5sum | head -c 32);
 if [ "$old" != "$new" ]
 then
-cat /opt/router/blacklist/list/ipsum.lst | sed 's_.*_route & reject;_' > /etc/bird/ipsum.txt
-cat /opt/router/blacklist/list/subnet.lst | sed 's_.*_route & reject;_' > /etc/bird/subnet.txt
+cat $DIR/*.lst | sort -u | grep -v ":" | sed 's_.*_route & reject;_' > /etc/bird/conf.d/antifilter.conf
 /usr/sbin/birdc configure;
 logger "RKN list reconfigured";
-echo $new > /opt/router/blacklist/md5.txt;
+echo $new > $DIR/md5.txt;
 fi
