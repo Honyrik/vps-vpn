@@ -25,8 +25,8 @@ def _parse_token(s: str) -> Union[ipaddress.IPv4Network, ipaddress.IPv6Network]:
 
 
 def collect_networks(lines: Iterable[str]) -> tuple[List, List]:
-    v4: List = []
-    v6: List = []
+    v4: Set = []
+    v6: Set = []
     for raw in lines:
         line = raw.strip()
         if not line or line.startswith("#"):
@@ -44,7 +44,7 @@ def collect_networks(lines: Iterable[str]) -> tuple[List, List]:
                 v4.append(net)
             else:
                 v6.append(net)
-    return v4, v6
+    return list(v4), list(v6)
 
 
 def collapse_lines(lines: Iterable[str]) -> List[str]:
