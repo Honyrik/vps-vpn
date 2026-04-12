@@ -44,7 +44,7 @@ def collect_networks(lines: Iterable[str]) -> tuple[List, List]:
                 v4.append(net)
             else:
                 v6.append(net)
-    return list(v4), list(v6)
+    return list(sorted(v4)), list(sorted(v6))
 
 
 def collapse_lines(lines: Iterable[str]) -> List[str]:
