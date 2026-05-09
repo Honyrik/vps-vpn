@@ -127,6 +127,9 @@ ufw allow from 192.168.59.0/24 to 192.168.59.1/32 app Named
 ufw allow from 192.168.57.0/24 to 192.168.57.1/32 app OpenSSH
 ufw allow from 192.168.58.0/24 to 192.168.58.1/32 app OpenSSH
 ufw allow from 192.168.59.0/24 to 192.168.59.1/32 app OpenSSH
+ufw allow from 192.168.57.0/24 to any proto tcp port 8080
+ufw allow from 192.168.58.0/24 to any proto tcp port 8080
+ufw allow from 192.168.59.0/24 to any proto tcp port 8080
 ufw route allow in on wg0 out on ens3
 ufw route allow in on wg1 out on ens3
 ufw route allow in on awg0 out on ens3
