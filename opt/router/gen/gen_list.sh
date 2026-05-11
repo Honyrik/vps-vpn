@@ -4,7 +4,7 @@ cd $DIR
 mkdir -p $DIR/tmp
 declare -g isReload
 isReload=0
-for site in $(cat $DIR/site.list);
+for site in $(cat $DIR/site.list | /opt/router/scripts/dns_resolvable.py);
 do
   dig @1.1.1.1 +short A $site | grep -v -e '\.$' | grep -v "connection timed out" | sort -u >> $DIR/tmp/${site}.txt.all
   dig @8.8.8.8 +short A $site | grep -v -e '\.$' | grep -v "connection timed out" | sort -u >> $DIR/tmp/${site}.txt.all
