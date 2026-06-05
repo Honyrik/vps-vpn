@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Router Status</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h1>Router Status</h1>
+        <div id="status"></div>
+        <script>
+            const interfacesCheck = ["igb0", "ng0", "awg0", "awg1"]
+            fetch('/api/interfaces')
+            .then(response => response.json())
+            .then(data => {
+                const status = document.getElementById('status');
+                const interfaces = data.interfaces.filter(interface => interfacesCheck.includes(interface.name));
+               
+                const table = document.createElement('table');
+                table.innerHTML = `
+                    <tr>
+                        <th>Interface</th>
+                        <th>Status</th>
+                        <th>IP</th>
+                    </tr>
+                `;
+                const tbody = document.createElement('tbody');
+                interfaces.forEach(interface => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${interface.name}</td>
+                        <td>${interface.operstate == 'up' ? '✅' : '❌'}</td>
+                        <td>${interface.ipv4.map(ip => ip.address).join(', ')}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+                table.appendChild(tbody);
+                status.appendChild(table);
+                const inet = document.createElement('div');   
+                inet.innerHTML = `Internet: ${data.inet ? '✅' : '❌'}`;
+                inet.style.color = data.inet ? 'green' : 'red';
+                status.appendChild(inet);
+            });
+        </script>
+    </body>
+</html>
