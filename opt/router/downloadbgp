@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 DIR=/opt/router/blacklist/list
+SELF_PID=$$
+
+if pgrep -f "^/bin/bash $0$" | grep -qv "^${SELF_PID}$"; then
+    echo "Already running"
+    exit 1
+fi
+
 mkdir -p $DIR
 cd $DIR
 wget -N https://antifilter.download/list/ipsum.lst https://antifilter.download/list/subnet.lst
@@ -8,8 +15,8 @@ old=$(cat $DIR/md5.txt);
 new=$(cat $DIR/*.lst | md5sum | head -c 32);
 if [ "$old" != "$new" ]
 then
-cat $DIR/*.lst | sort -u | grep -v ":" | sed 's_.*_route & reject;_' > /etc/bird/conf.d/antifilter.conf
-/usr/sbin/birdc configure;
-logger "RKN list reconfigured";
-echo $new > $DIR/md5.txt;
+    cat $DIR/*.lst | sort -u | grep -v ":" | sed 's_.*_route & reject;_' > /etc/bird/conf.d/antifilter.conf
+    /usr/sbin/birdc configure;
+    logger "RKN list reconfigured";
+    echo $new > $DIR/md5.txt;
 fi

@@ -2,6 +2,14 @@
 DIR=/opt/router/gen
 cd $DIR
 mkdir -p $DIR/tmp
+
+SELF_PID=$$
+
+if pgrep -f "^/bin/bash $0$" | grep -qv "^${SELF_PID}$"; then
+    echo "Already running"
+    exit 1
+fi
+
 declare -g isReload
 isReload=0
 for site in $(cat $DIR/site.list | /opt/router/scripts/dns_resolvable.py);
