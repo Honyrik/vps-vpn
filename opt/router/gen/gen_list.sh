@@ -5,8 +5,8 @@ mkdir -p $DIR/tmp
 
 SELF_PID=$$
 
-if pgrep -f "^/bin/bash $0$" | grep -qv "^${SELF_PID}$"; then
-    echo "Already running"
+if pgrep -f "bash $0" | grep -qv "^${SELF_PID}$"; then
+    echo "Already running $0"
     exit 1
 fi
 
